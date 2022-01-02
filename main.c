@@ -16,10 +16,10 @@ struct {
 //
 
 typedef struct {
-  char* path;
-  int width;
-  int height;
-  int x_max;
+    char* path;
+    int width;
+    int height;
+    int x_max;
 } Piece_Struct;
 
 //
@@ -36,11 +36,11 @@ Piece_Struct pieces[7] = {
 //
 
 typedef struct {
-  Texture2D texture;
-  Vector2 vector;
-  int width;
-  int height;
-  int rotation;
+    Texture2D texture;
+    Vector2 vector;
+    int width;
+    int height;
+    int rotation;
 } Piece_Interface;
 
 Piece_Interface piece_variable;
@@ -62,12 +62,12 @@ void block_velocity(int* velocity_counter, int velocity, Piece_Interface* block_
 
 bool is_colliding__board(Piece_Interface piece, char direction)
 {
-  Vector2 position = piece.vector;
-  int width = piece.width - BOARDBLOCK_WIDTH_SIZE;
+    Vector2 position = piece.vector;
+    int width = piece.width - BOARDBLOCK_WIDTH_SIZE;
 	if (direction == 'r') {
-		return !(position.x != ((BOARDBLOCK_WIDTH_SIZE)*10)-width);
+        return !(position.x != ((BOARDBLOCK_WIDTH_SIZE)*10)-width);
 	} else if (direction == 'l') {
-		return !(position.x != ((BOARDBLOCK_WIDTH_SIZE)*1));
+        return !(position.x != ((BOARDBLOCK_WIDTH_SIZE)*1));
 	}
 }
 
@@ -75,68 +75,68 @@ bool is_colliding__board(Piece_Interface piece, char direction)
 
 Texture2D load_image(char* path, int resize_width, int resize_height)
 {
-  Image image = LoadImage(path);
-  ImageResize(&image, resize_width, resize_height);
-  Texture2D texture = LoadTextureFromImage(image);
-  UnloadImage(image);
-  return texture;
+    Image image = LoadImage(path);
+    ImageResize(&image, resize_width, resize_height);
+    Texture2D texture = LoadTextureFromImage(image);
+    UnloadImage(image);
+    return texture;
 }
 
 //
 
 void piece_generator(Piece_Interface* piece_variable)
 {
-  int random_piece = rand() % 6;
-  int x_piece = ((rand() % pieces[random_piece].x_max) + 1)*BOARDBLOCK_WIDTH_SIZE;
-  Texture2D texture = load_image(pieces[random_piece].path,
+    int random_piece = rand() % 6;
+    int x_piece = ((rand() % pieces[random_piece].x_max) + 1)*BOARDBLOCK_WIDTH_SIZE;
+    Texture2D texture = load_image(pieces[random_piece].path,
     pieces[random_piece].width,pieces[random_piece].height);
-  Vector2 vector = {x_piece, BOARDBLOCK_HEIGHT_SIZE};
-  UnloadTexture(piece_variable->texture);
-  piece_variable->texture = texture;
-  piece_variable->vector = vector;
-  piece_variable->width = pieces[random_piece].width;
-  piece_variable->height = pieces[random_piece].height;
-  piece_variable->rotation = 0;
+    Vector2 vector = {x_piece, BOARDBLOCK_HEIGHT_SIZE};
+    UnloadTexture(piece_variable->texture);
+    piece_variable->texture = texture;
+    piece_variable->vector = vector;
+    piece_variable->width = pieces[random_piece].width;
+    piece_variable->height = pieces[random_piece].height;
+    piece_variable->rotation = 0;
 }
 
 //
 
 void rotation_piece(Piece_Interface* piece_variable)
 {
-  /* all buggy
-  int width = piece_variable->width;
-  int height = piece_variable->height;
-  switch (piece_variable->rotation) {
-    case 0:
-      {
-        piece_variable->rotation = 90;
-        piece_variable->width = height;
-        piece_variable->height = width;
-        piece_variable->vector->x = piece_variable->vector->x +
-      }
-      break;
-    case 90:
-      {
-        piece_variable->rotation = 180;
-        piece_variable->width = height;
-        piece_variable->height = width;
-      }
-      break;
-    case 180:
-      {
-        piece_variable->rotation = 270;
-        piece_variable->width = height;
-        piece_variable->height = width;
-      }
-      break;
-    case 270:
-      {
-        piece_variable->rotation = 0;
-        piece_variable->width = height;
-        piece_variable->height = width;
-      }
-      break;
-  }
+    /* all buggy
+    int width = piece_variable->width;
+    int height = piece_variable->height;
+    switch (piece_variable->rotation) {
+        case 0:
+            {
+                piece_variable->rotation = 90;
+                piece_variable->width = height;
+                piece_variable->height = width;
+                piece_variable->vector->x = piece_variable->vector->x +
+            }
+            break;
+        case 90:
+            {
+                piece_variable->rotation = 180;
+                piece_variable->width = height;
+                piece_variable->height = width;
+            }
+            break;
+        case 180:
+            {
+                piece_variable->rotation = 270;
+                piece_variable->width = height;
+                piece_variable->height = width;
+            }
+            break;
+        case 270:
+            {
+                piece_variable->rotation = 0;
+                piece_variable->width = height;
+                piece_variable->height = width;
+            }
+            break;
+    }
 */
 }
 
@@ -148,13 +148,13 @@ int main(void)
 	InitWindow(screen.width, screen.height, "fma tetris");
 	SetTargetFPS(60);
 
-	Texture2D board_texture = load_image("assets/Board.png", screen.width, screen.height);
-  piece_generator(&piece_variable);
+    Texture2D board_texture = load_image("assets/Board.png", screen.width, screen.height);
+    piece_generator(&piece_variable);
 	//
 	//
 	int velocity_counter = 0;
 	int velocity = 10;
-  int rotation = 0;
+    int rotation = 0;
 	while (!WindowShouldClose()) {
 		//
 		if (IsKeyPressed(KEY_RIGHT) &&
@@ -165,12 +165,12 @@ int main(void)
 				piece_variable.vector.x -= BOARDBLOCK_WIDTH_SIZE;
 		} else if (IsKeyDown(KEY_DOWN)) {
     		piece_variable.vector.y += (BOARDBLOCK_HEIGHT_SIZE);
-    } else if (IsKeyDown(KEY_UP) && !rotation) {
-        rotation_piece(&piece_variable);
-        rotation = 1;
-    } else if (IsKeyUp(KEY_UP)) {
-        rotation = 0;
-    }
+        } else if (IsKeyDown(KEY_UP) && !rotation) {
+            rotation_piece(&piece_variable);
+            rotation = 1;
+        } else if (IsKeyUp(KEY_UP)) {
+            rotation = 0;
+        }
 
 		//
 		BeginDrawing();
