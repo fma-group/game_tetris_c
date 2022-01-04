@@ -188,12 +188,12 @@ int main(void)
 			piece_variable.vector.x += BOARDBLOCK_WIDTH_SIZE;
 		} else if (IsKeyPressed(KEY_LEFT) &&
 			!is_colliding__board(piece_variable, 'l')) {
-				piece_variable.vector.x -= BOARDBLOCK_WIDTH_SIZE;
+			piece_variable.vector.x -= BOARDBLOCK_WIDTH_SIZE;
 		} else if (IsKeyDown(KEY_DOWN)) {
     		piece_variable.vector.y += (BOARDBLOCK_HEIGHT_SIZE);
         } else if (IsKeyDown(KEY_UP) && !rotation) {
             update_piece(&piece_variable,
-                piece_variable.rotation+90 == 360 ? 0 : piece_variable.rotation+90
+            piece_variable.rotation+90 == 360 ? 0 : piece_variable.rotation+90
             );
             rotation = 1;
         } else if (IsKeyUp(KEY_UP)) {
@@ -235,3 +235,5 @@ int main(void)
 
 	return 0;
 }
+
+//'-'
