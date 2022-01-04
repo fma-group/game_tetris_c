@@ -104,6 +104,19 @@ void piece_generator(Piece_Interface* piece_variable)
 }
 //
 
+void update_piece_s_function(Piece_Interface** piece_variable, char* buffer,int rotation, int width, int height)
+{
+    (*piece_variable)->texture = load_image(buffer, height, width);
+    (*piece_variable)->width = height;
+    (*piece_variable)->height = width;
+    if ((*piece_variable)->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
+        (*piece_variable)->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
+    }
+    (*piece_variable)->rotation = rotation;
+}
+
+//
+
 void update_piece(Piece_Interface* piece_variable, int new_rotation)
 {
     char* name_piece = piece_variable->name;
@@ -114,52 +127,28 @@ void update_piece(Piece_Interface* piece_variable, int new_rotation)
             char buffer[15];
             strcat(strcpy(buffer, name_piece), ".png");
             UnloadTexture(piece_variable->texture);
-            piece_variable->texture = load_image(buffer, height, width);
-            piece_variable->width = height;
-            piece_variable->height = width;
-            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
-                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
-            }
-            piece_variable->rotation = 0;
+            update_piece_s_function(&piece_variable, buffer, new_rotation, width, height);
             }
             break;
         case 90:{
             char buffer[15];
             strcat(strcpy(buffer, name_piece), "90.png");
             UnloadTexture(piece_variable->texture);
-            piece_variable->texture = load_image(buffer, height, width);
-            piece_variable->width = height;
-            piece_variable->height = width;
-            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
-                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
-            }
-            piece_variable->rotation = 90;
+            update_piece_s_function(&piece_variable, buffer, new_rotation, width, height);
             }
             break;
         case 180:{
             char buffer[15];
             strcat(strcpy(buffer, name_piece), "180.png");
             UnloadTexture(piece_variable->texture);
-            piece_variable->texture = load_image(buffer, height, width);
-            piece_variable->width = height;
-            piece_variable->height = width;
-            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
-                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
-            }
-            piece_variable->rotation = 180;
+            update_piece_s_function(&piece_variable, buffer, new_rotation, width, height);
             }
             break;
         case 270:{
             char buffer[15];
             strcat(strcpy(buffer, name_piece), "270.png");
             UnloadTexture(piece_variable->texture);
-            piece_variable->texture = load_image(buffer, height, width);
-            piece_variable->width = height;
-            piece_variable->height = width;
-            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
-                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
-            }
-            piece_variable->rotation = 270;
+            update_piece_s_function(&piece_variable, buffer, new_rotation, width, height);
             }
             break;
     }
