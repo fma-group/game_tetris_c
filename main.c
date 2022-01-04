@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct {
     int width, height;
@@ -17,6 +18,7 @@ struct {
 
 typedef struct {
     char* path;
+    char* name;
     int width;
     int height;
     int x_max;
@@ -24,18 +26,19 @@ typedef struct {
 
 //
 Piece_Struct pieces[7] = {
-  {.path="assets/O.png", .width=50, .height=50, .x_max=9},
-  {.path="assets/Z.png", .width=75, .height=50, .x_max=8},
-  {.path="assets/L.png", .width=75, .height=50, .x_max=8},
-  {.path="assets/T.png", .width=75, .height=50, .x_max=8},
-  {.path="assets/I.png", .width=25, .height=100, .x_max=10},
-  {.path="assets/J.png", .width=75, .height=50, .x_max=8},
-  {.path="assets/S.png", .width=75, .height=50, .x_max=8}
+  {.path="assets/O.png", .name="assets/O", .width=50, .height=50, .x_max=9},
+  {.path="assets/Z.png", .name="assets/Z", .width=75, .height=50, .x_max=8},
+  {.path="assets/L.png", .name="assets/L", .width=75, .height=50, .x_max=8},
+  {.path="assets/T.png", .name="assets/T", .width=75, .height=50, .x_max=8},
+  {.path="assets/I.png", .name="assets/I", .width=25, .height=100, .x_max=10},
+  {.path="assets/J.png", .name="assets/J", .width=75, .height=50, .x_max=8},
+  {.path="assets/S.png", .name="assets/S", .width=75, .height=50, .x_max=8}
 };
 
 //
 
 typedef struct {
+    char* name;
     Texture2D texture;
     Vector2 vector;
     int width;
@@ -97,48 +100,72 @@ void piece_generator(Piece_Interface* piece_variable)
     piece_variable->width = pieces[random_piece].width;
     piece_variable->height = pieces[random_piece].height;
     piece_variable->rotation = 0;
+    piece_variable->name = pieces[random_piece].name;
 }
-
 //
 
-void rotation_piece(Piece_Interface* piece_variable)
+void update_piece(Piece_Interface* piece_variable, int new_rotation)
 {
-
+    char* name_piece = piece_variable->name;
     int width = piece_variable->width;
     int height = piece_variable->height;
-    switch (piece_variable->rotation) {
-        case 0:
-            {
-                piece_variable->rotation = 90;
-                piece_variable->width = height;
-                piece_variable->height = width;
+    switch (new_rotation) {
+        case 0:{
+            char buffer[15];
+            strcat(strcpy(buffer, name_piece), ".png");
+            UnloadTexture(piece_variable->texture);
+            piece_variable->texture = load_image(buffer, height, width);
+            piece_variable->width = height;
+            piece_variable->height = width;
+            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
+                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
+            }
+            piece_variable->rotation = 0;
             }
             break;
-        case 90:
-            {
-                piece_variable->rotation = 180;
-                piece_variable->width = height;
-                piece_variable->height = width;
+        case 90:{
+            char buffer[15];
+            strcat(strcpy(buffer, name_piece), "90.png");
+            UnloadTexture(piece_variable->texture);
+            piece_variable->texture = load_image(buffer, height, width);
+            piece_variable->width = height;
+            piece_variable->height = width;
+            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
+                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
+            }
+            piece_variable->rotation = 90;
             }
             break;
-        case 180:
-            {
-                piece_variable->rotation = 270;
-                piece_variable->width = height;
-                piece_variable->height = width;
+        case 180:{
+            char buffer[15];
+            strcat(strcpy(buffer, name_piece), "180.png");
+            UnloadTexture(piece_variable->texture);
+            piece_variable->texture = load_image(buffer, height, width);
+            piece_variable->width = height;
+            piece_variable->height = width;
+            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
+                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
+            }
+            piece_variable->rotation = 180;
             }
             break;
-        case 270:
-            {
-                piece_variable->rotation = 0;
-                piece_variable->width = height;
-                piece_variable->height = width;
+        case 270:{
+            char buffer[15];
+            strcat(strcpy(buffer, name_piece), "270.png");
+            UnloadTexture(piece_variable->texture);
+            piece_variable->texture = load_image(buffer, height, width);
+            piece_variable->width = height;
+            piece_variable->height = width;
+            if (piece_variable->vector.x + height > (float) (screen.width - BOARDBLOCK_WIDTH_SIZE)){
+                piece_variable->vector.x = (screen.width - BOARDBLOCK_WIDTH_SIZE) - height;
+            }
+            piece_variable->rotation = 270;
             }
             break;
     }
-
 }
 
+//
 
 ///////////////////////////////////////
 
@@ -165,7 +192,9 @@ int main(void)
 		} else if (IsKeyDown(KEY_DOWN)) {
     		piece_variable.vector.y += (BOARDBLOCK_HEIGHT_SIZE);
         } else if (IsKeyDown(KEY_UP) && !rotation) {
-            rotation_piece(&piece_variable);
+            update_piece(&piece_variable,
+                piece_variable.rotation+90 == 360 ? 0 : piece_variable.rotation+90
+            );
             rotation = 1;
         } else if (IsKeyUp(KEY_UP)) {
             rotation = 0;
@@ -182,11 +211,10 @@ int main(void)
 			);
 
             //
-			DrawTexturePro(piece_variable.texture,
-                (Rectangle){ 0, 0, piece_variable.width, piece_variable.height },
-                (Rectangle){ piece_variable.vector.x, piece_variable.vector.y, piece_variable.height,  piece_variable.width},
+			DrawTextureEx(piece_variable.texture,
                 piece_variable.vector,
-                piece_variable.rotation,
+                0,
+                1,
                 WHITE
             );
 
