@@ -103,7 +103,7 @@ void piece_generator(Piece_Interface* piece_variable)
 
 void rotation_piece(Piece_Interface* piece_variable)
 {
-    /* all buggy
+
     int width = piece_variable->width;
     int height = piece_variable->height;
     switch (piece_variable->rotation) {
@@ -112,7 +112,6 @@ void rotation_piece(Piece_Interface* piece_variable)
                 piece_variable->rotation = 90;
                 piece_variable->width = height;
                 piece_variable->height = width;
-                piece_variable->vector->x = piece_variable->vector->x +
             }
             break;
         case 90:
@@ -137,7 +136,7 @@ void rotation_piece(Piece_Interface* piece_variable)
             }
             break;
     }
-*/
+
 }
 
 
@@ -182,8 +181,16 @@ int main(void)
 				WHITE
 			);
 
-      //
-			DrawTextureEx(piece_variable.texture, piece_variable.vector,piece_variable.rotation,1, WHITE);
+            //
+			DrawTexturePro(piece_variable.texture,
+                (Rectangle){ 0, 0, piece_variable.width, piece_variable.height },
+                (Rectangle){ piece_variable.vector.x, piece_variable.vector.y, piece_variable.height,  piece_variable.width},
+                piece_variable.vector,
+                piece_variable.rotation,
+                WHITE
+            );
+
+
 			DrawFPS(10, 3);
 		EndDrawing();
 		//
